@@ -2,25 +2,30 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>生日快乐</title>
 <style>
-  /* ========== CSS Variables: Morandi Palette ========== */
   :root {
-    --pink: #D4A0A0;
-    --pink-light: #E8C8C8;
-    --blue: #A0B8C8;
-    --blue-light: #C0D4E0;
-    --green: #B0C4A0;
-    --cream: #F5EDE3;
-    --warm: #E8D5C0;
-    --text: #5A4A4A;
-    --text-light: #8A7A7A;
-    --white: #FEFCFA;
-    --shadow: rgba(90, 74, 74, 0.1);
+    --pink: #FF6B9D;
+    --pink-light: #FFB3D1;
+    --pink-pale: #FFE8F2;
+    --yellow: #FFD93D;
+    --yellow-light: #FFF3B0;
+    --orange: #FF9A3C;
+    --orange-light: #FFD4A8;
+    --blue: #6BCBFF;
+    --blue-light: #C8EEFF;
+    --green: #6BCB77;
+    --green-light: #C8F0CC;
+    --purple: #C77DFF;
+    --purple-light: #EDD9FF;
+    --cream: #FFFDF8;
+    --white: #FFFFFF;
+    --text: #3D2C2C;
+    --text-light: #8A6A6A;
+    --shadow: rgba(255, 107, 157, 0.15);
   }
 
-  /* ========== Reset & Base ========== */
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
@@ -31,13 +36,7 @@
     line-height: 1.6;
   }
 
-  /* ========== SVG Icon Helpers ========== */
-  .icon-svg {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  /* ========== Landing / Hero ========== */
+  /* ========== HERO ========== */
   .hero {
     position: relative;
     min-height: 100vh;
@@ -45,690 +44,575 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--pink-light) 0%, var(--cream) 50%, var(--blue-light) 100%);
+    background: linear-gradient(160deg, #FFE8F2 0%, #FFF3B0 35%, #C8EEFF 70%, #C8F0CC 100%);
     overflow: hidden;
+    padding: 20px;
   }
 
-  /* Confetti Canvas */
-  #confetti-canvas {
+  #confetti-canvas, #fireworks-canvas {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
     pointer-events: none;
-    z-index: 1;
   }
+  #confetti-canvas { z-index: 1; }
+  #fireworks-canvas { z-index: 2; }
 
-  /* Fireworks Canvas */
-  #fireworks-canvas {
+  /* Deco bubbles */
+  .bubble {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 2;
+    border-radius: 50%;
+    opacity: 0.25;
+    animation: floatBubble linear infinite;
   }
 
   .hero-content {
     position: relative;
     z-index: 10;
     text-align: center;
-    padding: 20px;
-    animation: fadeInUp 1.5s ease;
-  }
-
-  .hero-content h1 {
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    color: var(--pink);
-    text-shadow: 0 2px 20px rgba(212,160,160,0.3);
-    margin-bottom: 10px;
-    letter-spacing: 4px;
-  }
-
-  .hero-content .subtitle {
-    font-size: clamp(1rem, 3vw, 1.5rem);
-    color: var(--text-light);
-    margin-bottom: 30px;
-    font-weight: 300;
+    padding: 20px 16px;
+    animation: fadeInUp 1.2s ease;
+    width: 100%;
+    max-width: 500px;
   }
 
   /* Photo Frame */
-  .photo-frame {
+  .photo-wrapper {
     position: relative;
-    width: clamp(180px, 40vw, 260px);
-    height: clamp(180px, 40vw, 260px);
-    margin: 0 auto 30px;
+    display: inline-block;
+    margin-bottom: 24px;
+  }
+
+  .photo-frame {
+    width: clamp(160px, 45vw, 240px);
+    height: clamp(160px, 45vw, 240px);
     border-radius: 50%;
     overflow: hidden;
-    box-shadow: 0 0 0 8px var(--white), 0 0 0 12px var(--pink-light), 0 20px 60px var(--shadow);
+    box-shadow: 0 0 0 6px var(--white), 0 0 0 10px var(--pink-light), 0 16px 48px var(--shadow);
     animation: float 3s ease-in-out infinite;
+    margin: 0 auto;
   }
 
-  .photo-frame img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
   .photo-frame .placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--pink-light), var(--blue-light));
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, var(--pink-pale), var(--blue-light));
+    display: flex; align-items: center; justify-content: center;
   }
+  .photo-frame .placeholder svg { width: 55%; height: 55%; opacity: 0.5; }
 
-  .photo-frame .placeholder svg {
-    width: 60%;
-    height: 60%;
-    opacity: 0.6;
-  }
-
-  /* Crown */
   .crown {
     position: absolute;
-    top: -30px;
-    left: 50%;
+    top: -28px; left: 50%;
     transform: translateX(-50%);
-    width: 50px;
-    height: 40px;
+    width: 48px; height: 38px;
     animation: crownBounce 2s ease-in-out infinite;
     z-index: 11;
+    filter: drop-shadow(0 2px 4px rgba(255,107,157,0.4));
   }
 
-  /* Cake SVG */
+  .hero-content h1 {
+    font-size: clamp(2.2rem, 9vw, 4.5rem);
+    background: linear-gradient(135deg, var(--pink) 0%, var(--orange) 50%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+    letter-spacing: 4px;
+    line-height: 1.2;
+  }
+
+  .hero-content .subtitle {
+    font-size: clamp(0.95rem, 3.5vw, 1.3rem);
+    color: var(--text-light);
+    margin-bottom: 8px;
+    font-weight: 300;
+  }
+
   .cake-wrapper {
-    margin-bottom: 20px;
+    margin: 0 auto 20px;
     animation: cakeBounce 1.5s ease-in-out infinite;
+    display: inline-block;
   }
+  .cake-wrapper svg { width: clamp(55px, 12vw, 70px); height: clamp(55px, 12vw, 70px); }
 
-  .cake-wrapper svg {
-    width: 70px;
-    height: 70px;
-  }
-
-  /* Scroll Hint */
   .scroll-hint {
     position: absolute;
-    bottom: 30px;
-    left: 50%;
+    bottom: 24px; left: 50%;
     transform: translateX(-50%);
     z-index: 10;
     text-align: center;
     animation: bounce 2s ease-in-out infinite;
     cursor: pointer;
   }
+  .scroll-hint span { display: block; font-size: 13px; color: var(--text-light); margin-bottom: 6px; }
+  .scroll-hint svg { width: 24px; height: 24px; color: var(--pink); }
 
-  .scroll-hint span {
-    display: block;
-    font-size: 14px;
-    color: var(--text-light);
-    margin-bottom: 8px;
-  }
-
-  .scroll-hint .arrow {
-    font-size: 24px;
-    color: var(--pink);
-  }
-
-  /* ========== Sections ========== */
+  /* ========== SECTIONS ========== */
   .section {
-    padding: clamp(60px, 10vw, 100px) 20px;
-    max-width: 900px;
+    padding: clamp(50px, 8vw, 90px) 16px;
+    max-width: 860px;
     margin: 0 auto;
+    width: 100%;
   }
 
   .section-title {
     text-align: center;
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
-    color: var(--pink);
-    margin-bottom: 10px;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    margin-bottom: 8px;
     letter-spacing: 2px;
   }
+
+  .section-title.pink { color: var(--pink); }
+  .section-title.orange { color: var(--orange); }
+  .section-title.purple { color: var(--purple); }
+  .section-title.green { color: var(--green); }
 
   .section-subtitle {
     text-align: center;
     color: var(--text-light);
-    margin-bottom: 50px;
-    font-size: 1rem;
+    margin-bottom: 40px;
+    font-size: 0.95rem;
   }
 
-  /* Section title icons */
-  .title-icon {
-    width: 32px;
-    height: 32px;
-    vertical-align: middle;
-    margin-right: 8px;
+  .title-icon { width: 28px; height: 28px; vertical-align: middle; margin-right: 6px; }
+
+  /* Section divider */
+  .divider {
+    height: 4px;
+    background: linear-gradient(90deg, var(--pink-light), var(--yellow), var(--blue-light), var(--green-light));
+    border-radius: 2px;
+    margin: 0 16px;
+    max-width: 860px;
+    margin-left: auto; margin-right: auto;
   }
 
-  /* ========== Timeline ========== */
-  .timeline {
-    position: relative;
-    padding: 20px 0;
-  }
+  /* ========== TIMELINE ========== */
+  .timeline { position: relative; padding: 16px 0; }
 
   .timeline::before {
     content: '';
     position: absolute;
-    left: 20px;
-    top: 0; bottom: 0;
+    left: 18px; top: 0; bottom: 0;
     width: 3px;
-    background: linear-gradient(to bottom, var(--pink-light), var(--blue-light), var(--green));
+    background: linear-gradient(to bottom, var(--pink-light), var(--yellow), var(--blue-light), var(--green-light));
     border-radius: 2px;
   }
 
   .timeline-item {
     position: relative;
-    padding-left: 60px;
-    margin-bottom: 40px;
+    padding-left: 52px;
+    margin-bottom: 32px;
     opacity: 0;
     transform: translateX(-20px);
     transition: all 0.6s ease;
   }
-
-  .timeline-item.visible {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  .timeline-item.visible { opacity: 1; transform: translateX(0); }
 
   .timeline-dot {
-    position: absolute;
-    left: 12px;
-    top: 5px;
-    width: 20px;
-    height: 20px;
+    position: absolute; left: 10px; top: 6px;
+    width: 18px; height: 18px;
     border-radius: 50%;
-    background: var(--pink);
     border: 3px solid var(--white);
-    box-shadow: 0 0 0 3px var(--pink-light);
   }
-
-  .timeline-item:nth-child(2) .timeline-dot { background: var(--blue); box-shadow: 0 0 0 3px var(--blue-light); }
-  .timeline-item:nth-child(3) .timeline-dot { background: var(--green); box-shadow: 0 0 0 3px #C8D8C0; }
-  .timeline-item:nth-child(4) .timeline-dot { background: var(--warm); box-shadow: 0 0 0 3px var(--warm); }
+  .timeline-item:nth-child(1) .timeline-dot { background: var(--pink); box-shadow: 0 0 0 3px var(--pink-light); }
+  .timeline-item:nth-child(2) .timeline-dot { background: var(--yellow); box-shadow: 0 0 0 3px var(--yellow-light); }
+  .timeline-item:nth-child(3) .timeline-dot { background: var(--blue); box-shadow: 0 0 0 3px var(--blue-light); }
+  .timeline-item:nth-child(4) .timeline-dot { background: var(--green); box-shadow: 0 0 0 3px var(--green-light); }
 
   .timeline-card {
     background: var(--white);
     border-radius: 16px;
-    padding: 24px;
+    padding: 20px;
     box-shadow: 0 4px 20px var(--shadow);
     transition: transform 0.3s ease;
+    border-left: 4px solid var(--pink-light);
   }
-
-  .timeline-card:hover {
-    transform: translateY(-4px);
-  }
+  .timeline-item:nth-child(2) .timeline-card { border-left-color: var(--yellow); }
+  .timeline-item:nth-child(3) .timeline-card { border-left-color: var(--blue-light); }
+  .timeline-item:nth-child(4) .timeline-card { border-left-color: var(--green-light); }
+  .timeline-card:hover { transform: translateY(-3px); }
 
   .timeline-card .date {
-    font-size: 0.85rem;
-    color: var(--pink);
-    font-weight: 600;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-size: 0.82rem; font-weight: 700;
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 5px;
   }
+  .timeline-card .date svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .timeline-item:nth-child(1) .date { color: var(--pink); }
+  .timeline-item:nth-child(2) .date { color: var(--orange); }
+  .timeline-item:nth-child(3) .date { color: var(--blue); }
+  .timeline-item:nth-child(4) .date { color: var(--green); }
 
-  .timeline-card .date svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-  }
+  .timeline-card h3 { font-size: 1rem; margin-bottom: 6px; color: var(--text); }
+  .timeline-card p { color: var(--text-light); font-size: 0.9rem; line-height: 1.7; }
 
-  .timeline-card h3 {
-    font-size: 1.1rem;
-    margin-bottom: 8px;
-    color: var(--text);
-  }
-
-  .timeline-card p {
-    color: var(--text-light);
-    font-size: 0.95rem;
-  }
-
-  /* ========== Photo Wall ========== */
+  /* ========== PHOTO WALL ========== */
   .photo-wall {
-    columns: 2;
-    column-gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
   }
 
-  @media (min-width: 700px) {
-    .photo-wall { columns: 3; }
+  @media (min-width: 600px) {
+    .photo-wall { grid-template-columns: repeat(3, 1fr); }
   }
 
   .photo-item {
-    break-inside: avoid;
-    margin-bottom: 16px;
-    border-radius: 12px;
+    border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 4px 16px var(--shadow);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     transition: transform 0.3s ease;
     cursor: pointer;
     background: var(--white);
+    aspect-ratio: 3/4;
+    display: flex;
+    flex-direction: column;
   }
-
-  .photo-item:hover {
-    transform: scale(1.03);
-  }
+  .photo-item:hover { transform: scale(1.03); }
 
   .photo-item .img-placeholder {
-    width: 100%;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 30px 20px;
+    min-height: 0;
   }
+  .photo-item .img-placeholder svg { width: 40px; height: 40px; opacity: 0.45; }
 
-  .photo-item .img-placeholder svg {
-    width: 48px;
-    height: 48px;
-    opacity: 0.5;
-  }
-
-  .photo-item:nth-child(1) .img-placeholder { background: linear-gradient(135deg, var(--pink-light), var(--pink)); height: 180px; }
-  .photo-item:nth-child(2) .img-placeholder { background: linear-gradient(135deg, var(--blue-light), var(--blue)); height: 220px; }
-  .photo-item:nth-child(3) .img-placeholder { background: linear-gradient(135deg, #C8D8C0, var(--green)); height: 160px; }
-  .photo-item:nth-child(4) .img-placeholder { background: linear-gradient(135deg, var(--warm), #D4C4B0); height: 200px; }
-  .photo-item:nth-child(5) .img-placeholder { background: linear-gradient(135deg, var(--pink), var(--blue)); height: 180px; }
-  .photo-item:nth-child(6) .img-placeholder { background: linear-gradient(135deg, var(--green), var(--warm)); height: 240px; }
+  .photo-item:nth-child(1) .img-placeholder { background: linear-gradient(135deg, var(--pink-pale), var(--pink-light)); }
+  .photo-item:nth-child(2) .img-placeholder { background: linear-gradient(135deg, var(--blue-light), var(--blue)); }
+  .photo-item:nth-child(3) .img-placeholder { background: linear-gradient(135deg, var(--green-light), var(--green)); }
+  .photo-item:nth-child(4) .img-placeholder { background: linear-gradient(135deg, var(--yellow-light), var(--yellow)); }
+  .photo-item:nth-child(5) .img-placeholder { background: linear-gradient(135deg, var(--purple-light), var(--purple)); }
+  .photo-item:nth-child(6) .img-placeholder { background: linear-gradient(135deg, var(--orange-light), var(--orange)); }
 
   .photo-item .caption {
-    padding: 10px 14px;
-    font-size: 0.85rem;
+    padding: 8px 10px;
+    font-size: 0.8rem;
     color: var(--text-light);
     text-align: center;
+    background: var(--white);
+    flex-shrink: 0;
   }
 
-  /* ========== Wishes / Messages ========== */
+  /* ========== WISHES ========== */
   .wishes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 600px) {
+    .wishes-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 800px) {
+    .wishes-grid { grid-template-columns: repeat(3, 1fr); }
   }
 
   .wish-card {
     background: var(--white);
-    border-radius: 16px;
-    padding: 28px;
+    border-radius: 18px;
+    padding: 24px 22px;
     box-shadow: 0 4px 20px var(--shadow);
     position: relative;
     transition: transform 0.3s ease;
   }
-
   .wish-card:hover { transform: translateY(-4px); }
+  .wish-card:nth-child(1) { border-top: 4px solid var(--pink); }
+  .wish-card:nth-child(2) { border-top: 4px solid var(--yellow); }
+  .wish-card:nth-child(3) { border-top: 4px solid var(--purple); }
 
   .wish-card::before {
     content: '"';
     position: absolute;
-    top: 10px; left: 20px;
-    font-size: 60px;
-    color: var(--pink-light);
-    font-family: Georgia, serif;
+    top: 8px; left: 18px;
+    font-size: 56px;
     line-height: 1;
+    font-family: Georgia, serif;
   }
+  .wish-card:nth-child(1)::before { color: var(--pink-light); }
+  .wish-card:nth-child(2)::before { color: var(--yellow-light); }
+  .wish-card:nth-child(3)::before { color: var(--purple-light); }
 
   .wish-card .wish-text {
-    font-size: 0.95rem;
-    line-height: 1.8;
+    font-size: 0.93rem;
+    line-height: 1.85;
     color: var(--text);
-    margin-bottom: 16px;
-    padding-top: 20px;
+    margin-bottom: 14px;
+    padding-top: 22px;
   }
 
   .wish-card .wish-author {
-    font-size: 0.85rem;
-    color: var(--pink);
+    font-size: 0.82rem;
     font-weight: 600;
     text-align: right;
   }
+  .wish-card:nth-child(1) .wish-author { color: var(--pink); }
+  .wish-card:nth-child(2) .wish-author { color: var(--orange); }
+  .wish-card:nth-child(3) .wish-author { color: var(--purple); }
 
-  .doc-link {
-    text-align: center;
-    margin-top: 40px;
-  }
-
+  .doc-link { text-align: center; margin-top: 36px; }
   .doc-link a {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 14px 32px;
-    background: linear-gradient(135deg, var(--pink), var(--blue));
+    background: linear-gradient(135deg, var(--pink), var(--purple));
     color: var(--white);
     text-decoration: none;
     border-radius: 30px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    box-shadow: 0 4px 20px rgba(212,160,160,0.3);
+    box-shadow: 0 4px 20px rgba(255,107,157,0.35);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-
   .doc-link a:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 30px rgba(212,160,160,0.5);
+    box-shadow: 0 6px 30px rgba(255,107,157,0.5);
   }
+  .doc-link a svg { width: 18px; height: 18px; flex-shrink: 0; }
 
-  /* ========== Wish Button / Interactive ========== */
+  /* ========== INTERACTIVE ========== */
   .wish-section {
     text-align: center;
-    background: linear-gradient(135deg, var(--pink-light) 0%, var(--cream) 50%, var(--blue-light) 100%);
-    padding: 80px 20px;
+    background: linear-gradient(135deg, var(--pink-pale) 0%, var(--yellow-light) 50%, var(--blue-light) 100%);
+    padding: clamp(50px, 10vw, 80px) 20px;
     border-radius: 30px;
-    margin: 40px 20px;
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 32px 16px;
+    max-width: 860px;
+    margin-left: auto; margin-right: auto;
   }
 
   .wish-btn {
-    display: inline-block;
-    padding: 18px 48px;
-    background: var(--white);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 40px;
+    background: linear-gradient(135deg, var(--yellow), var(--orange));
     border: none;
     border-radius: 30px;
-    font-size: 1.2rem;
-    color: var(--pink);
-    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--white);
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 20px var(--shadow);
+    box-shadow: 0 4px 24px rgba(255,154,60,0.4);
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
   }
-
-  .wish-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 30px rgba(212,160,160,0.3);
-  }
-
+  .wish-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+  .wish-btn:hover { transform: scale(1.06); box-shadow: 0 8px 32px rgba(255,154,60,0.5); }
   .wish-btn:active { transform: scale(0.98); }
 
-  .wish-btn svg {
-    width: 24px;
-    height: 24px;
-    vertical-align: middle;
-    margin-right: 8px;
-  }
-
+  /* Popup */
   .wish-popup {
     position: fixed;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%) scale(0);
     background: var(--white);
     border-radius: 24px;
-    padding: 40px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    padding: 36px 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
     z-index: 1000;
     text-align: center;
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    max-width: 400px;
-    width: 90%;
+    max-width: 360px;
+    width: 88%;
   }
-
   .wish-popup.show { transform: translate(-50%, -50%) scale(1); }
-
-  .wish-popup .popup-icon {
-    margin-bottom: 16px;
-  }
-  .wish-popup .popup-icon svg {
-    width: 60px;
-    height: 60px;
-  }
-
-  .wish-popup .text { font-size: 1.2rem; color: var(--text); line-height: 1.8; }
+  .wish-popup .popup-icon { margin-bottom: 14px; }
+  .wish-popup .popup-icon svg { width: 56px; height: 56px; }
+  .wish-popup .text { font-size: 1.1rem; color: var(--text); line-height: 1.85; }
 
   .overlay {
-    position: fixed;
-    top: 0; left: 0;
+    position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(0,0,0,0.3);
     z-index: 999;
-    opacity: 0;
-    pointer-events: none;
+    opacity: 0; pointer-events: none;
     transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
   }
-
   .overlay.show { opacity: 1; pointer-events: auto; }
 
-  /* ========== Footer ========== */
+  /* ========== FOOTER ========== */
   .footer {
     text-align: center;
-    padding: 60px 20px;
+    padding: 50px 20px 40px;
     color: var(--text-light);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
+  .footer .hearts svg { width: 28px; height: 28px; margin-bottom: 8px; }
 
-  .footer .hearts svg {
-    width: 30px;
-    height: 30px;
-    margin-bottom: 10px;
-  }
-
-  /* ========== Animations ========== */
+  /* ========== ANIMATIONS ========== */
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(40px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
+    50% { transform: translateY(-10px); }
   }
-
   @keyframes crownBounce {
     0%, 100% { transform: translateX(-50%) rotate(-5deg); }
     50% { transform: translateX(-50%) rotate(5deg); }
   }
-
   @keyframes cakeBounce {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    50% { transform: scale(1.08); }
   }
-
   @keyframes bounce {
     0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(10px); }
+    50% { transform: translateX(-50%) translateY(8px); }
   }
-
-  @keyframes sparkle {
-    0%, 100% { opacity: 0.3; transform: scale(0.8); }
-    50% { opacity: 1; transform: scale(1.2); }
+  @keyframes floatBubble {
+    from { transform: translateY(110vh) scale(0.5); opacity: 0.2; }
+    to { transform: translateY(-10vh) scale(1.2); opacity: 0; }
   }
-
-  /* ========== Decorative Sparkles ========== */
-  .sparkle {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--pink);
-    animation: sparkle 2s ease-in-out infinite;
-  }
-
-  /* ========== Lightbox ========== */
-  .lightbox {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85);
-    z-index: 2000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    cursor: pointer;
-  }
-
-  .lightbox.show { opacity: 1; pointer-events: auto; }
-
-  .lightbox .content {
-    max-width: 90%;
-    max-height: 80vh;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  /* ========== Responsive ========== */
-  @media (max-width: 480px) {
-    .wishes-grid { grid-template-columns: 1fr; }
-    .wish-section { margin: 20px 10px; padding: 50px 16px; }
+  @keyframes sparkPulse {
+    0%, 100% { opacity: 0.4; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.1); }
   }
 </style>
 </head>
 <body>
 
-<!-- ========== HERO / LANDING ========== -->
+<!-- ========== HERO ========== -->
 <section class="hero" id="hero">
   <canvas id="confetti-canvas"></canvas>
   <canvas id="fireworks-canvas"></canvas>
 
-  <!-- Decorative sparkles -->
-  <div class="sparkle" style="top:15%;left:10%;animation-delay:0s;"></div>
-  <div class="sparkle" style="top:25%;right:15%;animation-delay:0.5s;background:var(--blue);"></div>
-  <div class="sparkle" style="top:60%;left:8%;animation-delay:1s;background:var(--green);"></div>
-  <div class="sparkle" style="top:40%;right:10%;animation-delay:1.5s;background:var(--warm);"></div>
-  <div class="sparkle" style="top:75%;left:20%;animation-delay:0.8s;background:var(--pink);"></div>
+  <!-- Floating bubbles -->
+  <div class="bubble" style="width:60px;height:60px;background:var(--pink-light);left:5%;animation-duration:12s;animation-delay:0s;"></div>
+  <div class="bubble" style="width:40px;height:40px;background:var(--yellow);left:80%;animation-duration:9s;animation-delay:2s;"></div>
+  <div class="bubble" style="width:80px;height:80px;background:var(--blue-light);left:15%;animation-duration:15s;animation-delay:4s;"></div>
+  <div class="bubble" style="width:30px;height:30px;background:var(--green-light);left:70%;animation-duration:11s;animation-delay:1s;"></div>
+  <div class="bubble" style="width:50px;height:50px;background:var(--purple-light);left:45%;animation-duration:13s;animation-delay:3s;"></div>
 
   <div class="hero-content">
-    <div class="photo-frame">
-      <!-- Crown SVG -->
-      <div class="crown">
-        <svg viewBox="0 0 50 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 35L2 15L12 22L25 5L38 22L48 15L45 35H5Z" fill="#E8C8C8" stroke="#D4A0A0" stroke-width="2" stroke-linejoin="round"/>
-          <circle cx="12" cy="22" r="2.5" fill="#F5EDE3"/>
-          <circle cx="25" cy="8" r="2.5" fill="#F5EDE3"/>
-          <circle cx="38" cy="22" r="2.5" fill="#F5EDE3"/>
-          <line x1="5" y1="35" x2="45" y2="35" stroke="#D4A0A0" stroke-width="2.5"/>
-        </svg>
+    <div class="photo-wrapper">
+      <svg class="crown" viewBox="0 0 50 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 35L2 15L12 22L25 5L38 22L48 15L45 35H5Z" fill="#FFD93D" stroke="#FFB347" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="12" cy="22" r="2.5" fill="#FFF"/>
+        <circle cx="25" cy="8" r="2.5" fill="#FFF"/>
+        <circle cx="38" cy="22" r="2.5" fill="#FFF"/>
+        <line x1="5" y1="35" x2="45" y2="35" stroke="#FFB347" stroke-width="2.5"/>
+      </svg>
+      <div class="photo-frame">
+        <div class="placeholder">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="32" r="14" stroke="#FF6B9D" stroke-width="2.5" fill="none" opacity="0.5"/>
+            <circle cx="40" cy="32" r="5" fill="#FF6B9D" opacity="0.3"/>
+            <path d="M16 65C16 52 27 44 40 44C53 44 64 52 64 65" stroke="#FF6B9D" stroke-width="2.5" fill="none" opacity="0.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <!-- 替换为寿星照片: <img src="photo.jpg" alt="寿星"> -->
       </div>
-      <div class="placeholder">
-        <!-- Camera/photo placeholder SVG -->
-        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="40" cy="36" r="16" stroke="#5A4A4A" stroke-width="2.5" opacity="0.4"/>
-          <circle cx="40" cy="36" r="6" stroke="#5A4A4A" stroke-width="2" opacity="0.3"/>
-          <path d="M10 60V50C10 48 11 46 13 46H67C69 46 70 48 70 50V60" stroke="#5A4A4A" stroke-width="2.5" opacity="0.4" stroke-linecap="round"/>
-          <!-- Birthday star on photo -->
-          <path d="M40 12L43 20H51L45 25L47 33L40 28L33 33L35 25L29 20H37Z" fill="#D4A0A0" opacity="0.5"/>
-        </svg>
-      </div>
-      <!-- 替换为寿星照片: <img src="photo.jpg" alt="寿星"> -->
     </div>
 
-    <!-- Cake SVG -->
     <div class="cake-wrapper">
       <svg viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Candle flame -->
-        <ellipse cx="35" cy="8" rx="3" ry="5" fill="#E8C8C8" opacity="0.9">
-          <animate attributeName="ry" values="5;6;5" dur="1s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0.9;1;0.9" dur="1s" repeatCount="indefinite"/>
+        <ellipse cx="35" cy="8" rx="3" ry="5" fill="#FFB3D1" opacity="0.9">
+          <animate attributeName="ry" values="5;6.5;5" dur="0.9s" repeatCount="indefinite"/>
         </ellipse>
-        <ellipse cx="35" cy="7" rx="1.5" ry="3" fill="#F5EDE3" opacity="0.7">
-          <animate attributeName="ry" values="3;4;3" dur="0.8s" repeatCount="indefinite"/>
+        <ellipse cx="35" cy="7" rx="1.5" ry="3" fill="#FFE8F2" opacity="0.8">
+          <animate attributeName="ry" values="3;4;3" dur="0.7s" repeatCount="indefinite"/>
         </ellipse>
-        <!-- Candle -->
-        <rect x="33" y="13" width="4" height="14" rx="1" fill="#E8C8C8"/>
-        <line x1="33" y1="18" x2="37" y2="18" stroke="#D4A0A0" stroke-width="1"/>
-        <line x1="33" y1="22" x2="37" y2="22" stroke="#D4A0A0" stroke-width="1"/>
-        <!-- Cake top -->
-        <ellipse cx="35" cy="32" rx="22" ry="6" fill="#E8C8C8"/>
-        <rect x="13" y="32" width="44" height="16" rx="3" fill="#D4A0A0" opacity="0.6"/>
-        <!-- Cake bottom -->
-        <ellipse cx="35" cy="48" rx="24" ry="7" fill="#D4A0A0" opacity="0.5"/>
-        <rect x="11" y="48" width="48" height="12" rx="3" fill="#C8D8E0" opacity="0.4"/>
-        <!-- Base plate -->
-        <ellipse cx="35" cy="62" rx="28" ry="5" fill="#C0D4E0" opacity="0.5"/>
-        <!-- Frosting drips -->
-        <path d="M18 32C18 36 20 38 20 38" stroke="#F5EDE3" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>
-        <path d="M28 32C28 37 30 40 30 40" stroke="#F5EDE3" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>
-        <path d="M40 32C40 35 42 38 42 38" stroke="#F5EDE3" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>
-        <path d="M50 32C50 36 48 38 48 38" stroke="#F5EDE3" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>
+        <rect x="33" y="13" width="4" height="13" rx="1" fill="#FFD93D"/>
+        <line x1="33" y1="18" x2="37" y2="18" stroke="#FFB347" stroke-width="1"/>
+        <line x1="33" y1="21" x2="37" y2="21" stroke="#FFB347" stroke-width="1"/>
+        <ellipse cx="35" cy="30" rx="22" ry="6" fill="#FFB3D1"/>
+        <rect x="13" y="30" width="44" height="14" rx="3" fill="#FF6B9D" opacity="0.7"/>
+        <ellipse cx="35" cy="44" rx="24" ry="7" fill="#FFD93D" opacity="0.7"/>
+        <rect x="11" y="44" width="48" height="12" rx="3" fill="#FFD93D" opacity="0.5"/>
+        <ellipse cx="35" cy="58" rx="27" ry="5" fill="#C8EEFF" opacity="0.5"/>
+        <path d="M18 30C18 35 20 37 20 37" stroke="#FFF" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M29 30C29 36 31 39 31 39" stroke="#FFF" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M41 30C41 34 43 37 43 37" stroke="#FFF" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M50 30C50 35 48 37 48 37" stroke="#FFF" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
     </div>
 
     <h1>生日快乐</h1>
     <p class="subtitle">愿你的每一天都如今天般闪耀</p>
-    <p class="subtitle" style="font-size: 0.9rem; margin-top: 8px;">—— 来自所有爱你的朋友们</p>
+    <p class="subtitle" style="font-size:0.88rem;margin-top:4px;">—— 来自爱你的家人</p>
   </div>
 
   <div class="scroll-hint" onclick="document.getElementById('timeline').scrollIntoView({behavior:'smooth'})">
     <span>向下解锁惊喜</span>
-    <div class="arrow">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <polyline points="6 9 12 15 18 9"/>
-      </svg>
-    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
   </div>
 </section>
 
+<div class="divider"></div>
+
 <!-- ========== TIMELINE ========== -->
 <section class="section" id="timeline">
-  <h2 class="section-title">
-    <svg class="title-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="4" y="6" width="24" height="20" rx="3" stroke="currentColor" stroke-width="2" fill="none"/>
-      <circle cx="12" cy="16" r="3" fill="currentColor" opacity="0.4"/>
-      <path d="M20 13L26 16L20 19V13Z" fill="currentColor" opacity="0.4"/>
-    </svg>
+  <h2 class="section-title pink">
+    <svg class="title-icon" viewBox="0 0 28 28" fill="none"><rect x="3" y="4" width="22" height="20" rx="3" stroke="currentColor" stroke-width="2"/><circle cx="11" cy="14" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M18 11L23 14L18 17V11Z" fill="currentColor" opacity="0.5"/></svg>
     时光轴
   </h2>
-  <p class="section-subtitle">那些闪闪发光的日子</p>
+  <p class="section-subtitle">那些我们想对你说的话</p>
 
   <div class="timeline">
     <div class="timeline-item">
       <div class="timeline-dot"></div>
       <div class="timeline-card">
         <div class="date">
-          <svg viewBox="0 0 18 18" fill="currentColor"><path d="M9 1L11 6H16L12 9L13.5 14L9 11L4.5 14L6 9L2 6H7Z"/></svg>
-          初遇
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L10 6H15L11 9L12.5 14L8 11L3.5 14L5 9L1 6H6Z"/></svg>
+          从你出生的那天起
         </div>
-        <h3>第一次见面</h3>
-        <p>还记得那天阳光很好，我们笑着说"你好"。</p>
+        <h3>我们的家，因你完整</h3>
+        <p>姐姐，你知道吗，当你出生的那一刻，我们的家就变得不一样了。有你在，家里总是充满了笑声。</p>
       </div>
     </div>
 
     <div class="timeline-item">
       <div class="timeline-dot"></div>
       <div class="timeline-card">
-        <div class="date" style="color:var(--blue);">
-          <svg viewBox="0 0 18 18" fill="currentColor"><circle cx="9" cy="9" r="4"/><path d="M9 1V3M9 15V17M1 9H3M15 9H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          同行
+        <div class="date">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2.5" fill="currentColor" stroke="none"/></svg>
+          一起长大的岁月
         </div>
-        <h3>一起走过的日子</h3>
-        <p>那些加班的夜晚、一起吃的饭、笑到肚子疼的瞬间。</p>
+        <h3>你是我们的榜样</h3>
+        <p>那些吵架又和好的日子，那些一起看电视偷吃零食的夜晚，那些你替我们撑腰的瞬间——我们都记得。</p>
       </div>
     </div>
 
     <div class="timeline-item">
       <div class="timeline-dot"></div>
       <div class="timeline-card">
-        <div class="date" style="color:var(--green);">
-          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2V8L13 11"/><circle cx="9" cy="9" r="7"/></svg>
-          成长
+        <div class="date">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2V7L11 9"/><circle cx="8" cy="8" r="6"/></svg>
+          我们看着你越走越远
         </div>
-        <h3>看着你越来越好</h3>
-        <p>每一次突破，每一次成长，都让我们为你骄傲。</p>
+        <h3>骄傲，也想念</h3>
+        <p>你去到更大的世界，做更厉害的事。每次听到你的好消息，我们心里既骄傲又想你。姐姐，你很棒。</p>
       </div>
     </div>
 
     <div class="timeline-item">
       <div class="timeline-dot"></div>
       <div class="timeline-card">
-        <div class="date" style="color:var(--warm);">
-          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 15L9 3L15 15H3Z"/><line x1="7" y1="10" x2="11" y2="10"/></svg>
-          今天
+        <div class="date">
+          <svg viewBox="0 0 16 16" fill="currentColor" opacity="0.8"><path d="M8 1L9.5 5.5H14L10.5 8L12 13L8 10L4 13L5.5 8L2 5.5H6.5Z"/></svg>
+          今天，你的生日
         </div>
-        <h3>属于你的日子</h3>
-        <p>今天，所有的快乐都属于你。生日快乐！</p>
+        <h3>生日快乐，姐姐</h3>
+        <p>今天是你的节日。我们不在你身边，但心一直在。愿你今天被所有爱包围，笑得最灿烂。</p>
       </div>
     </div>
   </div>
 </section>
 
+<div class="divider"></div>
+
 <!-- ========== PHOTO WALL ========== -->
 <section class="section" id="photos">
-  <h2 class="section-title">
-    <svg class="title-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="3" y="5" width="26" height="22" rx="3" stroke="currentColor" stroke-width="2" fill="none"/>
-      <circle cx="13" cy="15" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
-      <path d="M3 23L10 16L16 21L22 14L29 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-    </svg>
+  <h2 class="section-title orange">
+    <svg class="title-icon" viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="24" height="20" rx="3" stroke="currentColor" stroke-width="2"/><circle cx="11" cy="13" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 21L9 14L14 19L19 12L26 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
     照片墙
   </h2>
   <p class="section-subtitle">定格每一个美好瞬间</p>
@@ -736,120 +620,93 @@
   <div class="photo-wall">
     <div class="photo-item">
       <div class="img-placeholder">
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M24 8C18 8 14 14 14 20C14 28 24 38 24 38C24 38 34 28 34 20C34 14 30 8 24 8Z" stroke="currentColor" stroke-width="2" fill="none"/>
-          <circle cx="24" cy="19" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        </svg>
+        <svg viewBox="0 0 48 48" fill="none"><path d="M24 8C18 8 14 14 14 20C14 28 24 38 24 38C24 38 34 28 34 20C34 14 30 8 24 8Z" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="19" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
       </div>
       <div class="caption">一起旅行</div>
     </div>
     <div class="photo-item">
       <div class="img-placeholder">
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M24 6C20 6 16 10 16 16C16 24 24 36 24 36C24 36 32 24 32 16C32 10 28 6 24 6Z" stroke="currentColor" stroke-width="2" fill="none"/>
-          <circle cx="24" cy="15" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          <path d="M18 30C18 34 20 38 24 38C28 38 30 34 30 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="8" stroke="currentColor" stroke-width="2"/><path d="M12 40C12 32 17 27 24 27C31 27 36 32 36 40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </div>
-      <div class="caption">春日野餐</div>
+      <div class="caption">美好时光</div>
     </div>
     <div class="photo-item">
       <div class="img-placeholder">
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M14 36H34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M16 36V20L24 14L32 20V36" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-          <rect x="21" y="26" width="6" height="10" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          <circle cx="24" cy="10" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          <path d="M24 7V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg viewBox="0 0 48 48" fill="none"><path d="M8 30C8 30 12 22 16 26C20 30 20 18 24 20C28 22 28 14 32 18C36 22 40 18 40 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="36" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
       </div>
-      <div class="caption">圣诞节派对</div>
+      <div class="caption">欢乐聚会</div>
     </div>
     <div class="photo-item">
       <div class="img-placeholder">
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 32C8 32 12 24 16 28C20 32 20 20 24 22C28 24 28 16 32 20C36 24 40 20 40 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <circle cx="36" cy="12" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          <path d="M12 36H36" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="16" width="28" height="22" rx="3" stroke="currentColor" stroke-width="2"/><path d="M18 16V12C18 9 21 7 24 7C27 7 30 9 30 12V16" stroke="currentColor" stroke-width="2"/></svg>
       </div>
-      <div class="caption">海边度假</div>
+      <div class="caption">收到礼物</div>
     </div>
     <div class="photo-item">
       <div class="img-placeholder">
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="24" cy="16" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
-          <path d="M16 32C16 28 19 24 24 24C29 24 32 28 32 32" stroke="currentColor" stroke-width="2" fill="none"/>
-          <path d="M14 40H34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M20 32V40M28 32V40" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg viewBox="0 0 48 48" fill="none"><path d="M24 8L26.5 16H35L28.5 20.5L31 29L24 24L17 29L19.5 20.5L13 16H21.5Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
       </div>
-      <div class="caption">游乐园</div>
+      <div class="caption">闪光时刻</div>
     </div>
     <div class="photo-item">
       <div class="img-placeholder">
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="24" cy="16" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
-          <circle cx="24" cy="16" r="4" fill="currentColor" opacity="0.3"/>
-          <path d="M10 34C14 28 20 30 24 26C28 30 34 28 38 34" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M6 40H42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="10" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="18" r="4" fill="currentColor" opacity="0.3"/><path d="M8 36C12 28 18 32 24 28C30 32 36 28 40 36" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
       </div>
       <div class="caption">日落时分</div>
     </div>
   </div>
 </section>
 
+<div class="divider"></div>
+
 <!-- ========== WISHES ========== -->
 <section class="section" id="wishes">
-  <h2 class="section-title">
-    <svg class="title-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M16 28L4 16C1 13 1 8 4 5C7 2 12 2 15 5L16 6L17 5C20 2 25 2 28 5C31 8 31 13 28 16L16 28Z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
-    </svg>
-    心声 · 祝福
+  <h2 class="section-title purple">
+    <svg class="title-icon" viewBox="0 0 28 28" fill="none"><path d="M14 24L3 13C1 11 1 7 3 5C5 3 9 3 11 5L14 8L17 5C19 3 23 3 25 5C27 7 27 11 25 13L14 24Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+    晚来的信
   </h2>
-  <p class="section-subtitle">想对你说的话</p>
+  <p class="section-subtitle">想对你说的话，都在这里了</p>
 
   <div class="wishes-grid">
     <div class="wish-card">
-      <p class="wish-text">愿你的未来像你的笑容一样灿烂，每一天都充满阳光和希望。</p>
-      <div class="wish-author">—— 朋友们</div>
+      <p class="wish-text">姐姐，你是我们心里永远的骄傲。不管走多远，家永远是你最温暖的港湾。</p>
+      <div class="wish-author">—— 你的家人</div>
     </div>
     <div class="wish-card">
-      <p class="wish-text">感谢你一直以来的善良和温暖，你值得世界上所有美好的事物。</p>
-      <div class="wish-author">—— 伙伴们</div>
+      <p class="wish-text">新的一岁，愿你被温柔以待，所有的努力都被看见，所有的期待都如期而至。</p>
+      <div class="wish-author">—— 你的弟弟妹妹</div>
     </div>
     <div class="wish-card">
-      <p class="wish-text">新的一岁，愿你心想事成，所行皆坦途，所愿皆成真！</p>
-      <div class="wish-author">—— 全体小伙伴</div>
+      <p class="wish-text">生日快乐，姐姐！愿你今年万事顺遂，笑口常开，健健康康，幸福长久。</p>
+      <div class="wish-author">—— 爱你的家人们</div>
     </div>
   </div>
 
   <div class="doc-link">
-    <a href="#" target="_blank">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:6px;" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 2H12L17 7V18H4V2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        <path d="M12 2V7H17" stroke="currentColor" stroke-width="1.5"/>
-        <line x1="7" y1="11" x2="14" y2="11" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-        <line x1="7" y1="14" x2="14" y2="14" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+    <a href="https://docs.qq.com/aio/DZWp4T0ZUQUhFQ3ZY" target="_blank">
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 2H11L16 7V16H3V2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <path d="M11 2V7H16" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="6" y1="10" x2="13" y2="10" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+        <line x1="6" y1="13" x2="13" y2="13" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
       </svg>
-      查看完整祝福（腾讯文档）
+      查看完整的信（腾讯文档）
     </a>
   </div>
 </section>
 
-<!-- ========== INTERACTIVE WISH ========== -->
+<div class="divider"></div>
+
+<!-- ========== INTERACTIVE ========== -->
 <section class="wish-section" id="interactive">
-  <h2 class="section-title" style="margin-bottom: 16px;">
-    <svg class="title-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M16 4L19 12H27L21 17L23 26L16 21L9 26L11 17L5 12H13Z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
-    </svg>
-    为寿星许个愿
+  <h2 class="section-title" style="color:var(--orange);margin-bottom:12px;">
+    <svg class="title-icon" viewBox="0 0 28 28" fill="none"><path d="M14 3L17 11H25L19 15.5L21.5 24L14 19L6.5 24L9 15.5L3 11H11Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+    为姐姐许个愿
   </h2>
-  <p class="section-subtitle" style="margin-bottom: 30px;">点击按钮，收获一份专属祝福</p>
+  <p class="section-subtitle" style="margin-bottom:28px;">点击按钮，送出一份专属祝福</p>
   <button class="wish-btn" id="wishBtn">
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2L15 8H21L16 12L18 19L12 15L6 19L8 12L3 8H9Z" fill="currentColor" opacity="0.8"/>
+    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 2L13.5 8H20L15 11.5L17 18L11 14L5 18L7 11.5L2 8H8.5Z" fill="currentColor" opacity="0.9"/>
     </svg>
     打开祝福
   </button>
@@ -858,277 +715,161 @@
 <!-- ========== FOOTER ========== -->
 <footer class="footer">
   <div class="hearts">
-    <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M15 26L4 15C1 12 1 7 4 4C7 1 12 1 15 4L15.5 3.5L16 4C19 1 24 1 27 4C30 7 30 12 27 15L15 26Z" fill="var(--pink)" opacity="0.6"/>
+    <svg viewBox="0 0 28 28" fill="none">
+      <path d="M14 24L3 13C1 11 1 7 3 5C5 3 9 3 11 5L14 8L17 5C19 3 23 3 25 5C27 7 27 11 25 13L14 24Z" fill="var(--pink)" opacity="0.7"/>
     </svg>
   </div>
   <p>愿你的每一天都如今天般美好</p>
-  <p style="margin-top: 8px; font-size: 0.8rem;">Made with love by 虾虾</p>
 </footer>
 
-<!-- ========== WISH POPUP ========== -->
+<!-- Popup & Overlay -->
 <div class="overlay" id="overlay"></div>
 <div class="wish-popup" id="wishPopup">
   <div class="popup-icon" id="popupIcon"></div>
   <p class="text" id="popupText"></p>
 </div>
 
-<!-- ========== LIGHTBOX ========== -->
-<div class="lightbox" id="lightbox">
-  <div class="content" id="lightboxContent"></div>
-</div>
-
 <script>
-// ========== Confetti (花洒/彩带) ==========
-(function() {
+// ========== Confetti ==========
+(function(){
   const canvas = document.getElementById('confetti-canvas');
   const ctx = canvas.getContext('2d');
   let W, H;
+  const colors = ['#FF6B9D','#FFD93D','#6BCBFF','#6BCB77','#C77DFF','#FF9A3C','#FFB3D1','#FFF3B0'];
   const pieces = [];
-  const colors = ['#D4A0A0', '#A0B8C8', '#B0C4A0', '#E8D5C0', '#E8C8C8', '#C0D4E0'];
 
-  function resize() {
-    W = canvas.width = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
+  function resize(){ W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+  resize(); window.addEventListener('resize', resize);
 
   class Piece {
-    constructor() { this.reset(true); }
-    reset(init) {
-      this.x = Math.random() * W;
-      this.y = init ? Math.random() * -H : Math.random() * -20;
-      this.w = 6 + Math.random() * 6;
-      this.h = 4 + Math.random() * 4;
-      this.color = colors[Math.floor(Math.random() * colors.length)];
-      this.speed = 0.5 + Math.random() * 1.5;
-      this.angle = Math.random() * Math.PI * 2;
-      this.spin = (Math.random() - 0.5) * 0.05;
-      this.drift = (Math.random() - 0.5) * 0.5;
+    constructor(){ this.reset(true); }
+    reset(init){
+      this.x = Math.random()*W;
+      this.y = init ? Math.random()*-H : -20;
+      this.w = 5+Math.random()*7; this.h = 3+Math.random()*5;
+      this.color = colors[Math.floor(Math.random()*colors.length)];
+      this.speed = 0.8+Math.random()*1.8;
+      this.angle = Math.random()*Math.PI*2;
+      this.spin = (Math.random()-0.5)*0.06;
+      this.drift = (Math.random()-0.5)*0.6;
     }
-    update() {
-      this.y += this.speed;
-      this.x += this.drift + Math.sin(this.angle) * 0.3;
-      this.angle += this.spin;
-      if (this.y > H + 20) this.reset(false);
-    }
-    draw() {
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.angle);
-      ctx.fillStyle = this.color;
-      ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
-      ctx.restore();
-    }
+    update(){ this.y+=this.speed; this.x+=this.drift+Math.sin(this.angle)*0.3; this.angle+=this.spin; if(this.y>H+20) this.reset(false); }
+    draw(){ ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.angle); ctx.fillStyle=this.color; ctx.globalAlpha=0.8; ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h); ctx.restore(); }
   }
 
-  for (let i = 0; i < 80; i++) pieces.push(new Piece());
-
-  function animate() {
-    ctx.clearRect(0, 0, W, H);
-    pieces.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(animate);
-  }
+  for(let i=0;i<90;i++) pieces.push(new Piece());
+  function animate(){ ctx.clearRect(0,0,W,H); pieces.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animate); }
   animate();
 })();
 
 // ========== Fireworks ==========
-(function() {
+(function(){
   const canvas = document.getElementById('fireworks-canvas');
   const ctx = canvas.getContext('2d');
   let W, H;
-  const fireworks = [];
-  const particles = [];
-  const colors = ['#D4A0A0', '#E8C8C8', '#A0B8C8', '#C0D4E0', '#B0C4A0', '#E8D5C0', '#F5A0B0', '#D4C4F0'];
+  const fws = [], parts = [];
+  const colors = ['#FF6B9D','#FFD93D','#6BCBFF','#6BCB77','#C77DFF','#FF9A3C','#FFB3D1'];
 
-  function resize() {
-    W = canvas.width = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
+  function resize(){ W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight; }
+  resize(); window.addEventListener('resize', resize);
 
-  class Firework {
-    constructor(sx, sy, tx, ty) {
-      this.x = sx; this.y = sy;
-      this.tx = tx; this.ty = ty;
-      this.speed = 3;
-      this.angle = Math.atan2(ty - sy, tx - sx);
-      this.distance = Math.sqrt((tx-sx)**2 + (ty-sy)**2);
-      this.traveled = 0;
-      this.trail = [];
-      this.done = false;
+  class FW {
+    constructor(sx,sy,tx,ty){
+      this.x=sx;this.y=sy;this.tx=tx;this.ty=ty;
+      this.angle=Math.atan2(ty-sy,tx-sx);
+      this.dist=Math.sqrt((tx-sx)**2+(ty-sy)**2);
+      this.traveled=0; this.speed=4; this.trail=[]; this.done=false;
     }
-    update() {
-      this.trail.push({x: this.x, y: this.y});
-      if (this.trail.length > 8) this.trail.shift();
-      const vx = Math.cos(this.angle) * this.speed;
-      const vy = Math.sin(this.angle) * this.speed;
-      this.x += vx; this.y += vy;
-      this.traveled += this.speed;
-      if (this.traveled >= this.distance) {
-        this.done = true;
-        this.explode();
+    update(){
+      this.trail.push({x:this.x,y:this.y});
+      if(this.trail.length>7) this.trail.shift();
+      this.x+=Math.cos(this.angle)*this.speed;
+      this.y+=Math.sin(this.angle)*this.speed;
+      this.traveled+=this.speed;
+      if(this.traveled>=this.dist){ this.done=true; this.explode(); }
+    }
+    explode(){
+      const n=55+Math.floor(Math.random()*35);
+      const c=colors[Math.floor(Math.random()*colors.length)];
+      for(let i=0;i<n;i++){
+        parts.push(new Part(this.x,this.y,(Math.PI*2/n)*i,1+Math.random()*4,c));
       }
     }
-    explode() {
-      const count = 60 + Math.floor(Math.random() * 40);
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      for (let i = 0; i < count; i++) {
-        const angle = (Math.PI * 2 / count) * i;
-        const speed = 1 + Math.random() * 4;
-        particles.push(new Particle(this.x, this.y, angle, speed, color));
-      }
-    }
-    draw() {
+    draw(){
+      if(this.trail.length<2) return;
       ctx.beginPath();
-      if (this.trail.length > 0) {
-        ctx.moveTo(this.trail[0].x, this.trail[0].y);
-        this.trail.forEach(t => ctx.lineTo(t.x, t.y));
-      }
-      ctx.lineTo(this.x, this.y);
-      ctx.strokeStyle = '#F5EDE3';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-      ctx.fillStyle = '#FFF';
-      ctx.fill();
+      ctx.moveTo(this.trail[0].x,this.trail[0].y);
+      this.trail.forEach(t=>ctx.lineTo(t.x,t.y));
+      ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1.5;ctx.stroke();
     }
   }
-
-  class Particle {
-    constructor(x, y, angle, speed, color) {
-      this.x = x; this.y = y;
-      this.vx = Math.cos(angle) * speed;
-      this.vy = Math.sin(angle) * speed;
-      this.alpha = 1;
-      this.decay = 0.008 + Math.random() * 0.012;
-      this.color = color;
-      this.gravity = 0.03;
+  class Part {
+    constructor(x,y,angle,speed,color){
+      this.x=x;this.y=y;this.vx=Math.cos(angle)*speed;this.vy=Math.sin(angle)*speed;
+      this.alpha=1;this.decay=0.009+Math.random()*0.012;this.color=color;this.gravity=0.04;
     }
-    update() {
-      this.vx *= 0.98;
-      this.vy *= 0.98;
-      this.vy += this.gravity;
-      this.x += this.vx;
-      this.y += this.vy;
-      this.alpha -= this.decay;
-    }
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, this.alpha);
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-      ctx.fillStyle = this.color;
-      ctx.fill();
-      ctx.restore();
-    }
+    update(){ this.vx*=0.97;this.vy*=0.97;this.vy+=this.gravity;this.x+=this.vx;this.y+=this.vy;this.alpha-=this.decay; }
+    draw(){ ctx.save();ctx.globalAlpha=Math.max(0,this.alpha);ctx.beginPath();ctx.arc(this.x,this.y,2.2,0,Math.PI*2);ctx.fillStyle=this.color;ctx.fill();ctx.restore(); }
   }
 
-  function launch() {
-    const sx = W * 0.3 + Math.random() * W * 0.4;
-    const sy = H;
-    const tx = W * 0.1 + Math.random() * W * 0.8;
-    const ty = H * 0.1 + Math.random() * H * 0.35;
-    fireworks.push(new Firework(sx, sy, tx, ty));
+  function launch(){
+    fws.push(new FW(W*0.25+Math.random()*W*0.5, H, W*0.1+Math.random()*W*0.8, H*0.08+Math.random()*H*0.4));
   }
 
-  // Auto-launch
-  let autoLaunch = setInterval(launch, 800);
-  setTimeout(() => { clearInterval(autoLaunch); setInterval(launch, 2000); }, 8000);
-
-  // Listen for custom firework launch event
+  let al=setInterval(launch,700);
+  setTimeout(()=>{ clearInterval(al); setInterval(launch,2200); },9000);
   window.addEventListener('launchFirework', launch);
 
-  function animate() {
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillStyle = 'rgba(0,0,0,0.15)';
-    ctx.fillRect(0, 0, W, H);
-    ctx.globalCompositeOperation = 'lighter';
-
-    for (let i = fireworks.length - 1; i >= 0; i--) {
-      fireworks[i].update();
-      fireworks[i].draw();
-      if (fireworks[i].done) fireworks.splice(i, 1);
-    }
-
-    for (let i = particles.length - 1; i >= 0; i--) {
-      particles[i].update();
-      particles[i].draw();
-      if (particles[i].alpha <= 0) particles.splice(i, 1);
-    }
-
-    ctx.globalCompositeOperation = 'source-over';
+  function animate(){
+    ctx.globalCompositeOperation='destination-out';
+    ctx.fillStyle='rgba(0,0,0,0.13)';ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation='lighter';
+    for(let i=fws.length-1;i>=0;i--){ fws[i].update();fws[i].draw();if(fws[i].done)fws.splice(i,1); }
+    for(let i=parts.length-1;i>=0;i--){ parts[i].update();parts[i].draw();if(parts[i].alpha<=0)parts.splice(i,1); }
+    ctx.globalCompositeOperation='source-over';
     requestAnimationFrame(animate);
   }
   animate();
 })();
 
-// ========== Scroll Animations ==========
-(function() {
-  const items = document.querySelectorAll('.timeline-item');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.2 });
-  items.forEach(item => observer.observe(item));
+// ========== Timeline scroll ==========
+(function(){
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:0.2});
+  document.querySelectorAll('.timeline-item').forEach(el=>obs.observe(el));
 })();
 
-// ========== Wish Button ==========
-(function() {
+// ========== Wish popup ==========
+(function(){
   const wishes = [
-    { svgId: 'fireworks', text: '愿你的人生如烟花般绚烂，每一刻都值得铭记！' },
-    { svgId: 'star', text: '新的一岁，愿你被世界温柔以待，所愿皆成真！' },
-    { svgId: 'flower', text: '愿你每天都有好心情，像春天的花一样绽放！' },
-    { svgId: 'balloon', text: '愿你永远保持这份热爱，奔赴下一场山海！' },
-    { svgId: 'sparkle', text: '愿所有的美好都如期而至，所有的幸运都不期而遇！' },
-    { svgId: 'rainbow', text: '愿你的人生如彩虹般绚丽多彩，每一步都是风景！' },
-    { svgId: 'gift', text: '最好的礼物不是物质，而是你身边这些爱你的人！' },
-    { svgId: 'sunflower', text: '愿你像向日葵一样，永远朝着阳光生长！' },
+    { text:'姐姐，生日快乐！愿你的每一天都充满阳光，笑容永远灿烂！',
+      svg:'<svg viewBox="0 0 56 56" fill="none"><path d="M28 6L32 20H46L35 28L39 44L28 36L17 44L21 28L10 20H24Z" fill="#FFD93D" stroke="#FFB347" stroke-width="1.5"/></svg>' },
+    { text:'新的一岁，愿你被爱包围，事事顺心，平安喜乐！',
+      svg:'<svg viewBox="0 0 56 56" fill="none"><path d="M28 48L8 28C4 24 4 16 8 12C12 8 20 8 24 12L28 16L32 12C36 8 44 8 48 12C52 16 52 24 48 28L28 48Z" fill="#FF6B9D" opacity="0.8"/></svg>' },
+    { text:'愿你所有的努力都被温柔以待，所有的期待都如期而至！',
+      svg:'<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="18" stroke="#6BCBFF" stroke-width="2.5"/><path d="M20 28L25 33L36 22" stroke="#6BCBFF" stroke-width="3" stroke-linecap="round"/></svg>' },
+    { text:'愿你健康快乐，永远是家里最闪耀的那颗星！',
+      svg:'<svg viewBox="0 0 56 56" fill="none"><path d="M28 4C16 4 8 12 8 24C8 36 28 52 28 52C28 52 48 36 48 24C48 12 40 4 28 4Z" fill="#6BCB77" opacity="0.8"/></svg>' },
+    { text:'姐姐，你是我们最骄傲的家人！生日快乐，愿一切都好！',
+      svg:'<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="20" r="10" fill="#C77DFF" opacity="0.7"/><path d="M10 48C10 36 18 28 28 28C38 28 46 36 46 48" stroke="#C77DFF" stroke-width="3" stroke-linecap="round" fill="none"/></svg>' },
+    { text:'祝姐姐今天吃好喝好玩好，开心到忘记年纪！',
+      svg:'<svg viewBox="0 0 56 56" fill="none"><rect x="10" y="22" width="36" height="26" rx="4" fill="#FFD93D" opacity="0.7"/><rect x="8" y="18" width="40" height="8" rx="2" fill="#FF9A3C" opacity="0.8"/><line x1="28" y1="18" x2="28" y2="48" stroke="#FF6B9D" stroke-width="2"/><path d="M28 18C25 10 18 9 16 14C14 18 20 22 28 18Z" fill="#FF6B9D"/><path d="M28 18C31 10 38 9 40 14C42 18 36 22 28 18Z" fill="#FF6B9D"/></svg>' },
   ];
 
-  // SVG icons for popup
-  const svgs = {
-    fireworks: '<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30 10L32 24H40L34 28L36 40L30 34L24 40L26 28L20 24H28Z" fill="#D4A0A0" opacity="0.8"/><circle cx="10" cy="15" r="2" fill="#A0B8C8"/><circle cx="50" cy="20" r="2" fill="#B0C4A0"/><circle cx="15" cy="45" r="2" fill="#E8D5C0"/><circle cx="45" cy="42" r="2" fill="#D4A0A0"/><circle cx="8" cy="35" r="1.5" fill="#C0D4E0"/><circle cx="52" cy="38" r="1.5" fill="#E8C8C8"/></svg>',
-    star: '<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30 8L35 22H50L38 30L42 46L30 36L18 46L22 30L10 22H25Z" fill="#E8C8C8" stroke="#D4A0A0" stroke-width="1.5"/></svg>',
-    flower: '<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="20" r="8" fill="#E8C8C8"/><circle cx="20" cy="28" r="8" fill="#D4A0A0" opacity="0.7"/><circle cx="40" cy="28" r="8" fill="#D4A0A0" opacity="0.7"/><circle cx="22" cy="38" r="8" fill="#C0D4E0" opacity="0.7"/><circle cx="38" cy="38" r="8" fill="#C0D4E0" opacity="0.7"/><circle cx="30" cy="29" r="5" fill="#F5EDE3"/></svg>',
-    balloon: '<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="22" rx="12" ry="16" fill="#A0B8C8" opacity="0.7" stroke="#8AA8B8" stroke-width="1.5"/><path d="M30 38V55" stroke="#8AA8B8" stroke-width="1.5" stroke-linecap="round"/><path d="M25 52C27 55 33 55 35 52" stroke="#8AA8B8" stroke-width="1" fill="none"/></svg>',
-    sparkle: '<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30 5L33 20L48 20L36 28L40 45L30 35L20 45L24 28L12 20L27 20Z" fill="#E8D5C0" stroke="#D4C4B0" stroke-width="1.5"/></svg>',
-    rainbow: '<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 45C10 25 20 15 30 15C40 15 50 25 50 45" stroke="#D4A0A0" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M15 45C15 28 22 20 30 20C38 20 45 28 45 45" stroke="#A0B8C8" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M20 45C20 31 25 24 30 24C35 24 40 31 40 45" stroke="#B0C4A0" stroke-width="2" stroke-linecap="round" fill="none"/></svg>',
-    gift: '<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="24" width="36" height="28" rx="3" fill="#E8C8C8" stroke="#D4A0A0" stroke-width="1.5"/><rect x="10" y="20" width="40" height="8" rx="2" fill="#D4A0A0" stroke="#C89090" stroke-width="1.5"/><line x1="30" y1="20" x2="30" y2="52" stroke="#D4A0A0" stroke-width="1.5"/><path d="M30 20C28 14 22 12 20 16C18 20 24 22 30 20Z" fill="#D4A0A0"/><path d="M30 20C32 14 38 12 40 16C42 20 36 22 30 20Z" fill="#D4A0A0"/></svg>',
-    sunflower: '<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="22" r="8" fill="#E8D5C0" stroke="#D4C4B0" stroke-width="1.5"/><ellipse cx="30" cy="10" rx="3" ry="5" fill="#E8D5C0" opacity="0.8"/><ellipse cx="30" cy="34" rx="3" ry="5" fill="#E8D5C0" opacity="0.8"/><ellipse cx="18" cy="22" rx="5" ry="3" fill="#E8D5C0" opacity="0.8"/><ellipse cx="42" cy="22" rx="5" ry="3" fill="#E8D5C0" opacity="0.8"/><ellipse cx="22" cy="14" rx="3" ry="5" fill="#E8D5C0" opacity="0.7" transform="rotate(-30 22 14)"/><ellipse cx="38" cy="14" rx="3" ry="5" fill="#E8D5C0" opacity="0.7" transform="rotate(30 38 14)"/><ellipse cx="22" cy="30" rx="3" ry="5" fill="#E8D5C0" opacity="0.7" transform="rotate(30 22 30)"/><ellipse cx="38" cy="30" rx="3" ry="5" fill="#E8D5C0" opacity="0.7" transform="rotate(-30 38 30)"/><line x1="30" y1="38" x2="30" y2="55" stroke="#B0C4A0" stroke-width="2" stroke-linecap="round"/></svg>',
-  };
+  const btn=document.getElementById('wishBtn');
+  const popup=document.getElementById('wishPopup');
+  const overlay=document.getElementById('overlay');
+  const icon=document.getElementById('popupIcon');
+  const text=document.getElementById('popupText');
 
-  const btn = document.getElementById('wishBtn');
-  const popup = document.getElementById('wishPopup');
-  const overlay = document.getElementById('overlay');
-  const popupIcon = document.getElementById('popupIcon');
-  const popupText = document.getElementById('popupText');
-
-  btn.addEventListener('click', () => {
-    const wish = wishes[Math.floor(Math.random() * wishes.length)];
-    popupIcon.innerHTML = svgs[wish.svgId];
-    popupText.textContent = wish.text;
-    popup.classList.add('show');
-    overlay.classList.add('show');
-
-    // Launch extra fireworks
-    for (let i = 0; i < 3; i++) {
-      setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('launchFirework'));
-      }, i * 300);
-    }
+  btn.addEventListener('click',()=>{
+    const w=wishes[Math.floor(Math.random()*wishes.length)];
+    icon.innerHTML=w.svg; text.textContent=w.text;
+    popup.classList.add('show'); overlay.classList.add('show');
+    for(let i=0;i<4;i++) setTimeout(()=>window.dispatchEvent(new CustomEvent('launchFirework')),i*250);
   });
-
-  overlay.addEventListener('click', () => {
-    popup.classList.remove('show');
-    overlay.classList.remove('show');
-  });
+  overlay.addEventListener('click',()=>{ popup.classList.remove('show'); overlay.classList.remove('show'); });
 })();
 </script>
 
