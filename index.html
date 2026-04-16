@@ -294,6 +294,7 @@
     min-height: 0;
   }
   .photo-item .img-placeholder svg { width: 40px; height: 40px; opacity: 0.45; }
+  .photo-item img { flex: 1; width: 100%; height: 100%; object-fit: cover; display: block; min-height: 0; }
 
   .photo-item:nth-child(1) .img-placeholder { background: linear-gradient(135deg, var(--pink-pale), var(--pink-light)); }
   .photo-item:nth-child(2) .img-placeholder { background: linear-gradient(135deg, var(--blue-light), var(--blue)); }
@@ -631,10 +632,8 @@
       <div class="caption">一起旅行</div>
     </div>
     <div class="photo-item">
-      <div class="img-placeholder">
-        <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="8" stroke="currentColor" stroke-width="2"/><path d="M12 40C12 32 17 27 24 27C31 27 36 32 36 40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </div>
-      <div class="caption">美好时光</div>
+      <img src="images/twins-2005.jpg" alt="05年的我们">
+      <div class="caption">05年羊毛毡版</div>
     </div>
     <div class="photo-item">
       <div class="img-placeholder">
