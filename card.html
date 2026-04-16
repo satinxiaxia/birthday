@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1350px;
+    background: linear-gradient(135deg, #fff5f5 0%, #fff0e6 50%, #fff8f0 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* 装饰元素 */
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(255,182,193,0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(255,200,150,0.3) 0%, transparent 50%),
+      radial-gradient(circle at 70% 15%, rgba(200,200,255,0.2) 0%, transparent 40%),
+      radial-gradient(circle at 15% 75%, rgba(255,180,120,0.2) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  
+  .top-decoration {
+    position: absolute;
+    top: 40px;
+    display: flex;
+    gap: 15px;
+    z-index: 2;
+  }
+  .top-decoration span {
+    font-size: 32px;
+  }
+  
+  .photo-frame {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 50px;
+  }
+  .photo-frame img {
+    width: 420px;
+    height: 520px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 20px rgba(0,0,0,0.08);
+  }
+  
+  .divider {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+    border-radius: 2px;
+    margin: 30px 0;
+    z-index: 2;
+  }
+  
+  .title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #ff6b8a;
+    text-align: center;
+    z-index: 2;
+    margin-bottom: 12px;
+    letter-spacing: 8px;
+  }
+  
+  .subtitle {
+    font-size: 22px;
+    color: #ff9a5c;
+    z-index: 2;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+  }
+  
+  .qr-section {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 30px 45px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    z-index: 2;
+  }
+  .qr-section img {
+    width: 200px;
+    height: 200px;
+    border-radius: 16px;
+  }
+  .qr-text {
+    text-align: left;
+  }
+  .qr-text .scan {
+    font-size: 28px;
+    font-weight: 600;
+    color: #4a4a4a;
+    margin-bottom: 10px;
+  }
+  .qr-text .hint {
+    font-size: 18px;
+    color: #999;
+    line-height: 1.6;
+  }
+  
+  .bottom-decoration {
+    position: absolute;
+    bottom: 40px;
+    display: flex;
+    gap: 12px;
+    z-index: 2;
+  }
+  .bottom-decoration span {
+    font-size: 28px;
+  }
+</style>
+</head>
+<body>
+  <div class="top-decoration">
+    <span>🎂</span><span>🎈</span><span>🎉</span><span>🎊</span><span>✨</span>
+  </div>
+  
+  <div class="photo-frame">
+    <img src="./og-cover.png" alt="Birthday Photo">
+  </div>
+  
+  <div class="title">🎂 生日快乐 </div>
+  <div class="subtitle">一份来自家人的小惊喜，等你拆开～</div>
+  
+  <div class="divider"></div>
+  
+  <div class="qr-section">
+    <img src="./qr.png" alt="QR Code">
+    <div class="qr-text">
+      <div class="scan">📱 扫码查看</div>
+      <div class="hint">
+        用微信扫描二维码<br>
+        打开专属生日网页
+      </div>
+    </div>
+  </div>
+  
+  <div class="bottom-decoration">
+    <span>💕</span><span>🌸</span><span>💕</span>
+  </div>
+</body>
+</html>
