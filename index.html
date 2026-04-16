@@ -263,12 +263,25 @@
 
   /* ========== PHOTO WALL ========== */
   .photo-wall {
-    column-count: 2;
+    column-count: 1;
     column-gap: 12px;
     width: 100%;
   }
   @media (min-width: 600px) {
+    .photo-wall { column-count: 2; }
+  }
+  @media (min-width: 900px) {
     .photo-wall { column-count: 3; }
+  }
+
+  /* 照片墙 section 全宽显示 */
+  #photos {
+    max-width: 100% !important;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  #photos .photo-wall {
+    padding: 0 12px;
   }
 
   .photo-item {
