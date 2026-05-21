@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIGC培训师课程开发全攻略 - 思维导图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    min-height: 100vh;
+  }
+  .header {
+    text-align: center;
+    padding: 24px 20px 12px;
+    position: sticky;
+    top: 0;
+    background: #0f172a;
+    z-index: 10;
+  }
+  .header h1 {
+    font-size: 24px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  .header p { color: #64748b; font-size: 13px; }
+
+  .controls {
+    text-align: center;
+    padding: 8px;
+    position: sticky;
+    top: 72px;
+    background: #0f172a;
+    z-index: 10;
+  }
+  .controls button {
+    background: #1e293b;
+    color: #e2e8f0;
+    border: 1px solid #334155;
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    margin: 0 4px;
+    transition: all 0.2s;
+  }
+  .controls button:hover { background: #334155; border-color: #60a5fa; }
+
+  .addie-flow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 12px 20px;
+  }
+  .addie-step {
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .addie-step.a { background: #1e3a5f; border: 1px solid #60a5fa; color: #60a5fa; }
+  .addie-step.d1 { background: #1a3d2e; border: 1px solid #34d399; color: #34d399; }
+  .addie-step.d2 { background: #3d2a1a; border: 1px solid #f59e0b; color: #f59e0b; }
+  .addie-step.i { background: #3d1a3d; border: 1px solid #e879f9; color: #e879f9; }
+  .addie-step.e { background: #3d1a1a; border: 1px solid #f87171; color: #f87171; }
+  .arrow { color: #475569; font-size: 14px; }
+
+  .map-wrapper {
+    overflow: auto;
+    padding: 20px;
+    min-height: 400px;
+    scroll-behavior: smooth;
+  }
+
+  .tree {
+    display: inline-block;
+    min-width: 100%;
+  }
+
+  /* Simplified tree layout using flexbox */
+  .root-node {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .root-node .node {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1e3a5f, #2d1b4e);
+    border: 2px solid #60a5fa;
+    box-shadow: 0 0 30px rgba(96,165,250,0.15);
+    max-width: 420px;
+    line-height: 1.6;
+  }
+  .root-node .node .sub { font-size: 13px; font-weight: 400; color: #94a3b8; display: block; }
+
+  .branches {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 0 10px;
+  }
+
+  .branch {
+    flex: 0 0 auto;
+    min-width: 200px;
+    max-width: 300px;
+    background: #1e293b;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .branch:hover { transform: translateY(-2px); }
+
+  .branch-header {
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .branch-header .icon { font-size: 16px; }
+  .branch-header .tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: auto;
+    font-weight: 600;
+  }
+  .branch-header .tag.core { background: #dc2626; color: white; }
+  .branch-header .tag.high { background: #f59e0b; color: #000; }
+
+  .branch.cognition .branch-header { background: #1e3a5f; color: #93c5fd; }
+  .branch.practice .branch-header { background: #1a3d2e; color: #6ee7b7; }
+  .branch.expand .branch-header { background: #3d1a3d; color: #e879f9; }
+  .branch.method .branch-header { background: #3d2a1a; color: #fbbf24; }
+
+  .branch-body {
+    padding: 8px 0;
+  }
+
+  .chapter-group {
+    margin: 4px 0;
+  }
+  .chapter-title {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .chapter-title::before { content: '▸'; font-size: 10px; color: #64748b; transition: transform 0.2s; }
+  .chapter-title.open::before { transform: rotate(90deg); }
+  .chapter-title .ch-num { color: #60a5fa; font-weight: 700; }
+
+  .section-list {
+    display: none;
+    padding: 2px 14px 6px 24px;
+  }
+  .section-list.open { display: block; }
+
+  .section-item {
+    padding: 4px 0;
+    font-size: 12px;
+    color: #94a3b8;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    line-height: 1.5;
+  }
+  .section-item::before { content: '·'; color: #475569; }
+
+  .method-list {
+    padding: 8px 14px;
+  }
+  .method-item {
+    padding: 6px 0;
+    font-size: 12px;
+    color: #94a3b8;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    line-height: 1.5;
+  }
+  .method-item::before { content: '◆'; color: #f59e0b; font-size: 8px; }
+  .method-item .desc { color: #64748b; font-size: 11px; }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 16px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748b; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+  .footer { text-align: center; padding: 20px; color: #475569; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📖 AIGC培训师课程开发全攻略</h1>
+  <p>MAP模型 · 刘宁 许海星 赵明星 著 · 虾虾整理</p>
+</div>
+
+<div class="controls">
+  <button onclick="expandAll()">全部展开</button>
+  <button onclick="collapseAll()">全部收起</button>
+</div>
+
+<div class="addie-flow">
+  <span class="addie-step a"> Analysis 分析</span><span class="arrow">→</span>
+  <span class="addie-step d1">📐 Design 设计</span><span class="arrow">→</span>
+  <span class="addie-step d2">️ Development 开发</span><span class="arrow">→</span>
+  <span class="addie-step i">🎯 Implementation 实施</span><span class="arrow">→</span>
+  <span class="addie-step e"> Evaluation 评估</span>
+</div>
+
+<div class="map-wrapper">
+<div class="tree">
+
+  <!-- 根节点 -->
+  <div class="root-node">
+    <div class="node">🦐 AIGC培训师课程开发全攻略<span class="sub">MAP模型：Model + AIGC + Prompt</span></div>
+  </div>
+
+  <!-- 四大分支 -->
+  <div class="branches">
+
+    <!-- 认知篇 -->
+    <div class="branch cognition">
+      <div class="branch-header">
+        <span class="icon">📌</span>认知篇
+        <span class="tag" style="background:#1e3a5f;color:#93c5fd">第1-2章</span>
+      </div>
+      <div class="branch-body">
+        <div class="chapter-group">
+          <div class="chapter-title open" onclick="toggle(this)">
+            <span class="ch-num">第1章</span>AIGC时代的企业培训
+          </div>
+          <div class="section-list open">
+            <div class="section-item">1.1 企业人机协同的未来画面</div>
+            <div class="section-item">1.2 构建企业智慧大脑</div>
+            <div class="section-item">1.3 推动AIGC在企业中的应用</div>
+          </div>
+        </div>
+        <div class="chapter-group">
+          <div class="chapter-title open" onclick="toggle(this)">
+            <span class="ch-num">第2章</span>构建AIGC课程开发能力 <span class="tag core">核心</span>
+          </div>
+          <div class="section-list open">
+            <div class="section-item">2.1 企业课程开发与内训师培养</div>
+            <div class="section-item">2.2 培训师新地图——MAP模型 ★</div>
+            <div class="section-item"><b>M</b>: Model 应用经典模型</div>
+            <div class="section-item"><b>A</b>: AIGC 技术工具洞察</div>
+            <div class="section-item"><b>P</b>: Prompt 交互对话能力</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 实践篇-上 -->
+    <div class="branch practice">
+      <div class="branch-header">
+        <span class="icon">📌</span>实践篇（上）
+        <span class="tag" style="background:#1a3d2e;color:#6ee7b7">第3-4章</span>
+      </div>
+      <div class="branch-body">
+        <div class="chapter-group">
+          <div class="chapter-title" onclick="toggle(this)">
+            <span class="ch-num">第3章</span>Analysis 培训需求分析
+          </div>
+          <div class="section-list">
+            <div class="section-item">3.1 访谈法 + AIGC</div>
+            <div class="section-item">3.2 问卷法 + AIGC</div>
+            <div class="section-item">3.3 资料法 + AIGC</div>
+            <div class="section-item">3.4 观察法 + AIGC</div>
+          </div>
+        </div>
+        <div class="chapter-group">
+          <div class="chapter-title open" onclick="toggle(this)">
+            <span class="ch-num">第4章</span>Design 课程设计 <span class="tag core">核心</span>
+          </div>
+          <div class="section-list open">
+            <div class="section-item">4.1 目标先行：AIGC设定教学目标</div>
+            <div class="section-item">4.2 结构清晰：AIGC梳理课程大纲</div>
+            <div class="section-item">4.3 内容充实：AIGC展开知识内容</div>
+            <div class="section-item">4.4 策略得当：AIGC丰富教学策略</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 实践篇-下 -->
+    <div class="branch practice">
+      <div class="branch-header">
+        <span class="icon">📌</span>实践篇（下）
+        <span class="tag" style="background:#1a3d2e;color:#6ee7b7">第5-7章</span>
+      </div>
+      <div class="branch-body">
+        <div class="chapter-group">
+          <div class="chapter-title" onclick="toggle(this)">
+            <span class="ch-num">第5章</span>Development 课程资料制作
+          </div>
+          <div class="section-list">
+            <div class="section-item">5.1 授课PPT：AIGC快速生成</div>
+            <div class="section-item">5.2 培训师手册：AIGC提升效率</div>
+            <div class="section-item">5.3 学员手册：投喂AIGC完善</div>
+            <div class="section-item">5.4 配套文稿：AIGC快速完成</div>
+          </div>
+        </div>
+        <div class="chapter-group">
+          <div class="chapter-title" onclick="toggle(this)">
+            <span class="ch-num">第6章</span>Implementation 互动体验
+          </div>
+          <div class="section-list">
+            <div class="section-item">6.1 AIGC设计课堂互动游戏</div>
+            <div class="section-item">6.2 AI助教辅助学员学习讨论</div>
+            <div class="section-item">6.3 AIGC生成多媒体教学素材</div>
+          </div>
+        </div>
+        <div class="chapter-group">
+          <div class="chapter-title" onclick="toggle(this)">
+            <span class="ch-num">第7章</span>Evaluation 培训评估
+          </div>
+          <div class="section-list">
+            <div class="section-item">7.1 培训评估的真相与价值</div>
+            <div class="section-item">7.2 反应评估：AIGC问卷与分析</div>
+            <div class="section-item">7.3 学习评估：AIGC试题与批阅</div>
+            <div class="section-item">7.4 行为评估：AIGC追踪行为</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 拓展篇 -->
+    <div class="branch expand">
+      <div class="branch-header">
+        <span class="icon">📌</span>拓展篇
+        <span class="tag" style="background:#3d1a3d;color:#e879f9">第8-9章+附录</span>
+      </div>
+      <div class="branch-body">
+        <div class="chapter-group">
+          <div class="chapter-title" onclick="toggle(this)">
+            <span class="ch-num">第8章</span>课程宣发
+          </div>
+          <div class="section-list">
+            <div class="section-item">8.1 AI生成海报与形象照</div>
+            <div class="section-item">8.2 AI生成课程简介视频</div>
+            <div class="section-item">8.3 AI创作课程主题歌</div>
+          </div>
+        </div>
+        <div class="chapter-group">
+          <div class="chapter-title" onclick="toggle(this)">
+            <span class="ch-num">第9章</span>实践案例 <span class="tag high">案例</span>
+          </div>
+          <div class="section-list">
+            <div class="section-item">案例一：制造企业安全培训</div>
+            <div class="section-item">案例二：国企AIGC创课大赛</div>
+            <div class="section-item">案例三：保险岗位人效提升</div>
+          </div>
+        </div>
+        <div class="chapter-group">
+          <div class="chapter-title" onclick="toggle(this)">
+            <span class="ch-num">附录</span>
+          </div>
+          <div class="section-list">
+            <div class="section-item">附录A：内训课程开发升级</div>
+            <div class="section-item">附录B：AIGC高效开发微课</div>
+            <div class="section-item">附录C：职场效能倍增</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方法论 -->
+    <div class="branch method">
+      <div class="branch-header">
+        <span class="icon"></span>底层方法论
+      </div>
+      <div class="branch-body">
+        <div class="method-list">
+          <div class="method-item">
+            <span>ADDIE模型</span>
+            <span class="desc">分析→设计→开发→实施→评估</span>
+          </div>
+          <div class="method-item">
+            <span>MAP模型</span>
+            <span class="desc">Model + AIGC + Prompt</span>
+          </div>
+          <div class="method-item">
+            <span>柯氏四级评估</span>
+            <span class="desc">反应→学习→行为→成果</span>
+          </div>
+          <div class="method-item">
+            <span>布鲁姆目标分类</span>
+            <span class="desc">记忆→理解→应用→分析→评价→创造</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>认知篇</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>实践篇</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e879f9"></div>拓展篇</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>方法论</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>核心章节</div>
+</div>
+
+<div class="footer">🦐 虾虾整理 · 2026年5月21日</div>
+
+<script>
+function toggle(el) {
+  el.classList.toggle('open');
+  const list = el.nextElementSibling;
+  if (list) list.classList.toggle('open');
+}
+function expandAll() {
+  document.querySelectorAll('.chapter-title').forEach(el => {
+    el.classList.add('open');
+    const list = el.nextElementSibling;
+    if (list) list.classList.add('open');
+  });
+}
+function collapseAll() {
+  document.querySelectorAll('.chapter-title').forEach(el => {
+    el.classList.remove('open');
+    const list = el.nextElementSibling;
+    if (list) list.classList.remove('open');
+  });
+}
+</script>
+</body>
+</html>
